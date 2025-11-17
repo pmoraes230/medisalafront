@@ -1,14 +1,23 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, FC } from "react";
 import { useClock } from "@/hooks/useClock";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
-export const Header = () => {
+// Definindo as props do componente
+interface HeaderProps {
+  title?: string;           // opcional
+  titleClassName?: string;  // opcional, caso queira personalizar ainda mais a classe
+}
+
+export const Header: FC<HeaderProps> = ({ 
+  title = "Dashboard", 
+  titleClassName = "" 
+}) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const time = useClock();
   const { logout } = useAuth();
 
-  // === FECHA AO CLICAR FORA (VERSÃO CORRETA E CONFIÁVEL) ===
+  // === FECHA AO CLICAR FORA ===
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -20,7 +29,7 @@ export const Header = () => {
   }, []);
 
   const toggleDropdown = (e: React.MouseEvent) => {
-    e.stopPropagation(); // ← IMPORTANTE: impede que o clique no botão feche imediatamente
+    e.stopPropagation();
     setDropdownOpen(prev => !prev);
   };
 
@@ -28,8 +37,9 @@ export const Header = () => {
     <header className="header bg-white dark:bg-slate-900 p-4 rounded-xl shadow-md flex justify-between items-center mb-6 sticky top-0 z-10">
       {/* Lado esquerdo */}
       <div className="header-left">
-        <h1 className="page-title text-2xl font-semibold text-teal-800 dark:text-teal-400">
-          Dashboard
+        {/* Aqui usamos a prop title */}
+        <h1 className={`page-title text-2xl font-semibold text-teal-800 dark:text-teal-400 ${titleClassName}`}>
+          {title}
         </h1>
         <div className="live-clock flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 mt-1">
           <i className="bi bi-clock text-emerald-500"></i>
@@ -40,7 +50,7 @@ export const Header = () => {
         </div>
       </div>
 
-      {/* User Dropdown */}
+      {/* User Dropdown (mantido exatamente igual) */}
       <div className="relative" ref={dropdownRef}>
         <div
           className={`
@@ -68,7 +78,6 @@ export const Header = () => {
           <i className={`bi bi-chevron-down text-slate-600 dark:text-slate-400 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}></i>
         </div>
 
-        {/* Dropdown Menu */}
         {dropdownOpen && (
           <div className="dropdown-menu show absolute top-full right-0 mt-2 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden z-50 animate-in fade-in slide-in-from-top-4 duration-200">
             <a
