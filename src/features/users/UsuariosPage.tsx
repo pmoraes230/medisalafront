@@ -2,9 +2,7 @@ import { Sidebar } from '@/components/ui/SideBar';
 import { Header } from '@/components/ui/header';
 import { AccessibilityToggle } from '@/components/ui/AccessibilityToggle';
 
-export default function UsuariosPage() {
-    
-
+export const UsuariosPage = () => {
     return (
         <div className="container flex min-h-screen bg-slate-50">
             <Sidebar />
