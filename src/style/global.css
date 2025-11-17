@@ -54,3 +54,19 @@ body {
   padding: 0 !important;
   margin: 0 !important;
 }
+
+.bg_button {
+  background-color: var(--primary-dark);
+}
+
+.bg_button:hover {
+  background-color: #0a2926;
+}
+
+.bg_primary {
+  background-color: var(--primary);
+}
+
+.text_danger {
+  color: var(--danger);
+}

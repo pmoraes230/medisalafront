@@ -22,7 +22,7 @@ export const RoomsGrid = () => {
                             </div>
                             <div>
                                 <div className="room-name font-semibold text-slate-800">{sala.name}</div>
-                                <div className={`room-status text-sm font-medium ${sala.status === 'disponivel' ? 'text-emerald-600' : 'text-red-600'}`}>
+                                <div className={`room-status text-sm font-medium ${sala.status === 'disponivel' ? 'text-emerald-600' : 'text_danger'}`}>
                                     {sala.status === 'disponivel' ? 'Disponível' : 'Ocupada'}
                                 </div>
                             </div>

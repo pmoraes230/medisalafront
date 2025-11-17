@@ -1,10 +1,10 @@
-import { AccessibilityToggle } from "../../components/ui/AccessibilityToggle";
+import { AccessibilityToggle } from "@/components/ui/AccessibilityToggle";
 import { Calendar } from "./components/calendar";
 import { Chart } from "./components/chart";
-import { Header } from "./components/header";
+import { Header } from "@/components/ui/header";
 import { MetricsGrid } from "./components/MetricsGrid";
 import { RoomsGrid } from "./components/RoomGrid";
-import { Sidebar } from "./components/SideBar";
+import { Sidebar } from "@/components/ui/SideBar";
 
 import './styles/dashboard.css'
 

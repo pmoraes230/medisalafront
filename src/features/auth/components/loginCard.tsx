@@ -2,7 +2,7 @@ import { LoginForm } from './LoginForm';
 
 export const LoginCard = () => {
   return (
-    <div className="card shadow-lg p-4" style={{ maxWidth: '420px', width: '100%' }}>
+    <div className="card_login shadow-lg p-4" style={{ maxWidth: '420px', width: '100%' }}>
       <div className="card-body">
         <h3 className="text-center mb-2 fw-bold">
           <div className="logo">Gest<span>Sala</span></div>
