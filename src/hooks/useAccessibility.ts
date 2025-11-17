@@ -54,7 +54,7 @@ export const useAccessibility = () => {
         toggleDarkMode, 
         fontLevel, 
         increaseFontSize, 
-        fontSizes: FONT_SIZES, 
+        fontLabel: FONT_SIZES, 
         showMenu, 
         setShowMenu, 
         reset 

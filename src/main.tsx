@@ -12,6 +12,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 // Estilos personalizados
 import './style/global.css';
 import './style/bootstrap-override.css';
+import './style/sidebar.css'
 
 const queryClient = new QueryClient();
 

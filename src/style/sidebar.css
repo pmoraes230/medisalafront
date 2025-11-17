@@ -1,0 +1,50 @@
+.sidebar {
+  width: 280px;
+  background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  padding: 1.5rem 0;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+}
+
+.logo span { color: var(--accent); }
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.9rem 1.5rem;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  border-radius: 0 50px 50px 0;
+  margin-right: 1rem;
+  transition: var(--transition);
+  font-weight: 500;
+}
+
+.nav-link i {
+  width: 24px;
+  margin-right: 12px;
+  font-size: 1.1rem;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: white;
+  padding-left: 1.8rem;
+}
+
+.nav-link.active {
+  background-color: var(--accent);   /* laranja */
+  font-weight: 600;
+}
