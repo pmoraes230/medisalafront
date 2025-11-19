@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { Modal } from '../../../components/ui/Modal';
+import { Modal } from '@/components/ui/Modal';
 
 export const LoginForm = () => {
   const [identifier, setIdentifier] = useState('');

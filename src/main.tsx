@@ -9,9 +9,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
+import '@fortawesome/fontawesome-free/css/all.css';
+
 // Estilos personalizados
 import './style/global.css';
 import './style/bootstrap-override.css';
+import './style/sidebar.css'
+
+import 'tailwindcss'
 
 const queryClient = new QueryClient();
 

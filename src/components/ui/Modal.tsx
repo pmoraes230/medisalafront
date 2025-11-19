@@ -16,7 +16,7 @@ export const Modal = ({ show, onClose, title, children, type = 'success' }: Moda
   }[type];
 
   return (
-    <div className="modal fade show d-block" style={{ background: 'rgba(0,0,0,0.7)' }} tabIndex={-1}>
+    <div className="modal fade show d-block" style={{ background: 'rgba(0,0,0,0.7)', borderRadius: '1rem' }} tabIndex={-1}>
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
@@ -27,7 +27,7 @@ export const Modal = ({ show, onClose, title, children, type = 'success' }: Moda
           </div>
           <div className="modal-body text-dark">{children}</div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-primary" onClick={onClose}>
+            <button type="button" className="btn bg_button text-white" onClick={onClose}>
               OK
             </button>
           </div>

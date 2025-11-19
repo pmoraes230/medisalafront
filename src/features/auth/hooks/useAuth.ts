@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { storage } from "../../../lib/storage";
+import { storage } from "@/lib/storage";
 import { authApi } from "../services/authApi";
 
 export const useAuth = () => {
