@@ -16,6 +16,8 @@ import './style/global.css';
 import './style/bootstrap-override.css';
 import './style/sidebar.css'
 
+import 'tailwindcss'
+
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

@@ -82,10 +82,10 @@ export const Header: FC<HeaderProps> = ({
           <div className="dropdown-menu show absolute top-full right-0 mt-2 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden z-50 animate-in fade-in slide-in-from-top-4 duration-200">
             <a
               href="/perfil"
-              className="dropdown-item flex items-center gap-3 px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+              className="dropdown-item d-flex items-center gap-3 px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
               onClick={() => setDropdownOpen(false)}
             >
-              <i className="bi bi-person-circle text-lg"></i>
+              <i className="fas fa-user-edit text-lg"></i>
               Editar Perfil
             </a>
 
@@ -94,9 +94,9 @@ export const Header: FC<HeaderProps> = ({
                 setDropdownOpen(false);
                 logout();
               }}
-              className="dropdown-item w-full text-left flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+              className="dropdown-item w-full text-left d-flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
             >
-              <i className="bi bi-box-arrow-right text-lg"></i>
+              <i className="fas fa-sign-out-alt text-lg"></i>
               Sair do Sistema
             </button>
           </div>

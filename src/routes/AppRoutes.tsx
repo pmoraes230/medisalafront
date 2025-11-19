@@ -6,9 +6,9 @@ import { UsuariosPage } from '../features/users/UsuariosPage';
 
 export const AppRoutes = () => (
   <Routes>
-    <Route path="/login" element={<LoginPage />} />
+    <Route path="/*" element={<LoginPage />} />
     <Route
-      path="/*"
+      path="/dashboard"
       element={
         <ProtectedRoute>
           <DashboardPage />

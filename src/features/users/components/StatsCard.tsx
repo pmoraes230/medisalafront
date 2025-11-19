@@ -1,28 +1,72 @@
-interface StatsCardProps {
-  icon: string;
-  title: string;
-  value: number;
-  subtitle: string;
-  color: 'blue' | 'yellow' | 'purple';
-}
+import { useUsers } from "../hooks/useUsers";
 
-const colors = {
-  blue: 'bg-blue-500',
-  yellow: 'bg-amber-500',
-  purple: 'bg-purple-600'
-};
+export default function StatsCards() {
+  const { users } = useUsers();
 
-export default function StatsCard({ icon, title, value, subtitle, color }: StatsCardProps) {
+  const total = users.length;
+  const activate = users.filter(u => u.status !== 'inativo').length;
+  const teachers = users.filter(u => u.id_perfil === 2).length;
+  const admin = users.filter(u => u.id_perfil === 1).length;
+
+  const teachersPercent = total > 0 ? Math.round((teachers / total) * 100) : 0;
+  const adminPercent = total > 0 ? Math.round((admin / total) * 100) : 0;
+
+  const cards = [
+    {
+      icon: 'fa-users',
+      value: total,
+      label: 'Total de Usuários',
+      subtitle: `${activate} ativos`,
+      color: 'bg-primary',        // azul
+    },
+    {
+      icon: 'fa-chalkboard-teacher',
+      value: teachers,
+      label: 'Professores',
+      subtitle: `${teachersPercent}% do total`,
+      color: 'stat-teacher',          // amarelo
+    },
+    {
+      icon: 'fa-user-shield',
+      value: admin,
+      label: 'Administradores',
+      subtitle: `${adminPercent}% do total`,
+      color: 'bg-purple',           // roxo customizado (vamos criar)
+    },
+  ];
+
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition transform hover:-translate-y-1">
-      <div className="flex items-center justify-between mb-4">
-        <div className={`w-14 h-14 ${colors[color]} rounded-xl flex items-center justify-center text-white text-2xl`}>
-          <i className={`fas fa-${icon}`}></i>
+    <div className="row g-4 mb-5">
+      {cards.map((card, index) => (
+        <div key={index} className="col-12 col-md-6 col-lg-4">
+          <div className="stat-card">
+              {/* Ícone pequeno com cor */}
+              <div
+                className={`stat-icon ${card.color}`}
+                style={{ width: '40px', height: '40px', fontSize: '15px' }}
+              >
+                <i className={`fas ${card.icon}`}></i>
+              </div>
+
+              {/* Valor principal */}
+              <h2 className="stat-value"
+                  style={{
+                    color:
+                      card.color === 'bg-primary' ? '#0d6efd' :
+                      card.color === 'stat-teacher' ? '#ffc107' :
+                      '#8b5cf6'
+                  }}>
+                {card.value}
+              </h2>
+
+              {/* Título */}
+              <h5 className="stat-label">{card.label}</h5>
+
+              {/* Subtítulo */}
+              <p className="stat-subtitle">{card.subtitle}</p>
+          </div>
         </div>
-      </div>
-      <div className="text-4xl font-bold text-teal-800">{value}</div>
-      <div className="text-lg font-semibold text-slate-700 mt-1">{title}</div>
-      <div className="text-sm text-slate-500">{subtitle}</div>
+      ))}
     </div>
   );
 }
