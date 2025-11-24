@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 interface Props {
     onSearch: (term: string) => void;
@@ -7,37 +7,44 @@ interface Props {
 }
 
 export default function FiltersAndButtonSalas({ onSearch, onStatusFilter, onAddSala }: Props) {
-    const [search, setSearch] = useState('');
-    const [status, setStatus] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('');
 
     return (
         <div className="filters">
-            <input
-                type="text"
+            <input type="text"
                 className="search-input"
+                id="searchInput"
+                name="searchInput"
                 placeholder="Buscar por nome da sala..."
-                value={search}
+                value={searchTerm}
                 onChange={(e) => {
-                    setSearch(e.target.value);
-                    onSearch(e.target.value);
+                    const value = e.target.value;
+                    setSearchTerm(value);
+                    onSearch(value);
                 }}
             />
+
             <select
+                name="selectFilter"
+                id="selectFilter"
                 className="select-filter"
-                value={status}
+                value={statusFilter}
                 onChange={(e) => {
-                    setStatus(e.target.value);
-                    onStatusFilter(e.target.value);
+                    const value = e.target.value;
+                    setStatusFilter(value)
+                    onStatusFilter(value)
                 }}
             >
                 <option value="">Todos os Status</option>
                 <option value="Livre">Livre</option>
                 <option value="Reservado">Reservado</option>
-                <option value="Manutenção">Manutenção</option>
+                <option value="Manutenção">Manutenção</option>A
             </select>
+
             <button className="btn-add" onClick={onAddSala}>
                 <i className="fas fa-plus"></i> Adicionar Sala
             </button>
         </div>
-    );
+    )
 }

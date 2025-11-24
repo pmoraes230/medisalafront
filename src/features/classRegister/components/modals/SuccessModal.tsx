@@ -8,7 +8,7 @@ interface SuccessModalProps {
 export default function SuccessModal({ isOpen, message }: SuccessModalProps) {
   return (
     <ModalOverlay isOpen={isOpen} onClose={() => {}}>
-      <div className="modal">
+      <div className="modal_default">
         <div className="modal-header">
           <div className="modal-icon success">
             <i className="fas fa-check"></i>

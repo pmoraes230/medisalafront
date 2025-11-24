@@ -1,99 +1,93 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/set-state-in-effect */
-import { Sidebar } from '@/components/ui/SideBar';
-import { Header } from '@/components/ui/header';
-import StatsCardsSalas from './components/StatsCardsSalas';
-import FiltersAndButtonSalas from './components/FiltersAndButtonSalas';
-import SalasTable from './components/SalasTable';
-import AddSalaModal from './components/modals/AddSalaModal';
-import DeleteSalaModal from './components/modals/DeleteSalaModal';
-import SuccessModal from './components/modals/SuccessModal';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useMemo, useState } from "react";
+import { AccessibilityToggle } from "@/components/ui/AccessibilityToggle";
+import { Header } from "@/components/ui/header";
+import { Sidebar } from "@/components/ui/SideBar";
+import StateCardsSalas from "./components/StatsCardsSalas";
+import FiltersAndButtonSalas from "./components/FiltersAndButtonSalas";
+import SalasTable from "./components/SalasTable";
+import { useSalas } from "./hooks/useSalas";
+import AddSalaModal from "./components/modals/AddSalaModal";
+import DeleteSalaModal from "./components/modals/DeleteSalaModal";
 
-import { useSalas } from './hooks/useSalas';
-import { useState, useEffect } from 'react';
+import './styles/salas.css'
+import { Sala } from "./types/salas";
+import SuccessModal from "./components/modals/SuccessModal";
 
-export const SalasPage = () => {
-  const { salas, addSala, removeSala, refresh } = useSalas();
-  const [filteredSalas, setFilteredSalas] = useState(salas);
+export const RegisterRoom = () => {
+  const { salas, addSala, removeSala, refresh } = useSalas(); // ← addSala vem daqui!
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [successMsg, setSuccessMsg] = useState('');
-  const [salaToDelete, setSalaToDelete] = useState<any>(null);
+  const [salaToDelete, setSalaToDelete] = useState<Sala | null>(null);
 
-  useEffect(() => setFilteredSalas(salas), [salas]);
-
-  const handleSearch = (term: string) => {
-    const filtered = salas.filter(s => s.nome_sala.toLowerCase().includes(term.toLowerCase()));
-    setFilteredSalas(filtered);
-  };
-
-  const handleStatusFilter = (status: string) => {
-    if (!status) setFilteredSalas(salas);
-    else setFilteredSalas(salas.filter(s => s.status_sala === status));
-  };
-
-  const closeAll = () => {
-    setShowAddModal(false);
-    setShowDeleteModal(false);
-    setShowSuccess(false);
-  };
-
-  const showSuccessMsg = (msg: string) => {
-    setSuccessMsg(msg);
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 1600);
-  };
+  const salasFiltradas = useMemo(() => {
+    return salas.filter((sala) => {
+      const matchSearch = sala.nome_sala.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchStatus = !statusFilter || sala.status_sala === statusFilter;
+      return matchSearch && matchStatus;
+    });
+  }, [salas, searchTerm, statusFilter]);
 
   return (
-    <div className="container">
+    <div className="container flex min-h-screen bg-slate-50">
       <Sidebar />
-
-      <main className="main-content">
+      <main className="main-content flex-1 p-6">
         <Header title="Gestão de Salas" />
-
-        <p style={{ marginBottom: '1.5rem', color: 'var(--text-light)' }}>
+        <p style={{ marginBottom: '1.5rem', color: "var(--text-light)" }} className="text-slate-600 mb-6">
           Cadastre e gerencie as salas disponíveis para reserva.
         </p>
-
-        <StatsCardsSalas />
+        <StateCardsSalas />
         <FiltersAndButtonSalas
-          onSearch={handleSearch}
-          onStatusFilter={handleStatusFilter}
+          onSearch={setSearchTerm}
+          onStatusFilter={setStatusFilter}
           onAddSala={() => setShowAddModal(true)}
         />
+
         <SalasTable
-          salas={filteredSalas}
+          salas={salasFiltradas}
           onDelete={(id) => {
             const sala = salas.find(s => s.id_sala === id);
-            setSalaToDelete(sala);
+            setSalaToDelete(sala || null);
             setShowDeleteModal(true);
           }}
         />
 
+        {/* Modais aqui */}
         <AddSalaModal
           isOpen={showAddModal}
-          onClose={closeAll}
-          onSave={(sala) => {
-            addSala(sala);
-            closeAll();
-            showSuccessMsg('Sala cadastrada com sucesso!');
-          }}
+          onClose={() => setShowAddModal(false)}
+          onSave={(novaSala) => {
+            addSala({
+              nome_sala: novaSala.nome_sala,
+              capacidade_sala: novaSala.capacidade_sala,
+              status_sala: novaSala.status_sala as 'Livre' | 'Reservado' | 'Manutenção'
+            });
+            setShowAddModal(false)
+          }
+          }
         />
-
-        <DeleteSalaModal
+        < DeleteSalaModal 
           isOpen={showDeleteModal}
-          onClose={closeAll}
           sala={salaToDelete}
+          onClose={() => setShowDeleteModal(false)}
           onConfirm={() => {
-            removeSala(salaToDelete.id_sala);
-            closeAll();
-            showSuccessMsg('Sala excluída com sucesso!');
+            if (salaToDelete) {
+              removeSala(salaToDelete.id_sala);
+              setShowDeleteModal(false)
+            }
           }}
         />
 
-        <SuccessModal isOpen={showSuccess} message={successMsg} />
+        {/* <SuccessModal 
+          isOpen={showSuccessModal}
+          message={SuccessModal}
+        /> */}
       </main>
+      <AccessibilityToggle />
     </div>
-  );
-};
+  )
+}

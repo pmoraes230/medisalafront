@@ -19,17 +19,17 @@ export default function DeleteSalaModal({ isOpen, onClose, sala, onConfirm }: De
 
   return (
     <ModalOverlay isOpen={isOpen} onClose={onClose}>
-      <div className="modal" style={{ maxWidth: '500px' }}>
-        <div className="modal-header">
-          <button className="btn-close" onClick={onClose}>×</button>
-          <div className="modal-icon danger">
+      <div className="modal_default" style={{ maxWidth: '500px' }}>
+        <div className="modal_header">
+          <button className="btn_close" onClick={onClose}>×</button>
+          <div className="modal_icon danger">
             <i className="fas fa-trash-alt"></i>
           </div>
-          <div className="modal-title">Excluir Sala</div>
+          <div className="modal_title">Excluir Sala</div>
         </div>
 
-        <div className="modal-body">
-          <p>Tem certeza que deseja excluir a sala abaixo?</p>
+        <div className="modal_body">
+          <p style={{ marginBottom: '1.5rem', color: "var(--text-light)" }}>Tem certeza que deseja excluir a sala abaixo?</p>
           <div
             id="delete-sala-preview"
             style={{
@@ -48,7 +48,7 @@ export default function DeleteSalaModal({ isOpen, onClose, sala, onConfirm }: De
           </div>
         </div>
 
-        <div className="modal-footer">
+        <div className="modal_footer">
           <button className="btn-modal cancel" onClick={onClose}>
             Cancelar
           </button>

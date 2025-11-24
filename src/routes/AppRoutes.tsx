@@ -3,7 +3,7 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { LoginPage } from '../features/auth/LoginPage';
 import { DashboardPage } from '../features/dashboard/DashboardPage';
 import { UsuariosPage } from '../features/users/UsuariosPage';
-import { SalasPage } from '@/features/classRegister/SalasPage';
+import { RegisterRoom } from '@/features/classRegister/SalasPage';
 
 export const AppRoutes = () => (
   <Routes>
@@ -28,7 +28,7 @@ export const AppRoutes = () => (
       path="/salas"
       element={
         <ProtectedRoute>
-          <SalasPage />
+          <RegisterRoom />
         </ProtectedRoute>
       }
     />

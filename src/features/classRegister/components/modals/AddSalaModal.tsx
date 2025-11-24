@@ -30,21 +30,22 @@ export default function AddSalaModal({ isOpen, onClose, onSave }: AddSalaModalPr
 
   return (
     <ModalOverlay isOpen={isOpen} onClose={onClose}>
-      <div className="modal" style={{ maxWidth: '500px' }}>
-        <div className="modal-header">
-          <button className="btn-close" onClick={onClose}>×</button>
-          <div className="modal-icon" style={{ background: '#10b981' }}>
+      <div className="modal_default" style={{ maxWidth: '500px' }}>
+        <div className="modal_header">
+          <button className="btn_close" onClick={onClose}>×</button>
+          <div className="modal_icon" style={{ background: '#10b981' }}>
             <i className="fas fa-door-open"></i>
           </div>
-          <div className="modal-title">Adicionar Sala</div>
+          <div className="modal_title">Adicionar Sala</div>
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="modal-body">
+          <div className="modal_body">
             <div className="form-group">
-              <label>Nome da Sala *</label>
+              <label htmlFor='nomeSala'>Nome da Sala *</label>
               <input
                 type="text"
+                id='nomeSala'
                 name="nome_sala"
                 required
                 placeholder="Ex: Sala 101 - Anatomia"
@@ -52,10 +53,11 @@ export default function AddSalaModal({ isOpen, onClose, onSave }: AddSalaModalPr
             </div>
 
             <div className="form-group">
-              <label>Capacidade (pessoas) *</label>
+              <label htmlFor='capacidade_sala'>Capacidade (pessoas) *</label>
               <input
                 type="number"
                 name="capacidade_sala"
+                id='capacidade_sala'
                 required
                 min="1"
                 placeholder="30"
@@ -63,8 +65,8 @@ export default function AddSalaModal({ isOpen, onClose, onSave }: AddSalaModalPr
             </div>
 
             <div className="form-group">
-              <label>Status Inicial</label>
-              <select name="status_sala" defaultValue="Livre">
+              <label htmlFor='status_sala'>Status Inicial</label>
+              <select name="status_sala" id='status_sala' defaultValue="Livre">
                 <option value="Livre">Livre</option>
                 <option value="Reservado">Reservado</option>
                 <option value="Manutenção">Manutenção</option>
@@ -72,7 +74,7 @@ export default function AddSalaModal({ isOpen, onClose, onSave }: AddSalaModalPr
             </div>
           </div>
 
-          <div className="modal-footer">
+          <div className="modal_footer">
             <button type="button" className="btn-modal cancel" onClick={onClose}>
               Cancelar
             </button>
