@@ -9,13 +9,13 @@ export default function SuccessModal({ isOpen, message }: SuccessModalProps) {
   return (
     <ModalOverlay isOpen={isOpen} onClose={() => {}}>
       <div className="modal_default">
-        <div className="modal-header">
+        <div className="modal_header">
           <div className="modal-icon success">
             <i className="fas fa-check"></i>
           </div>
-          <div className="modal-title">Sucesso!</div>
+          <div className="modal_title">Sucesso!</div>
         </div>
-        <div className="modal-body">{message}</div>
+        <div style={{ margin: '1rem' }} className="modal_body">{message}</div>
       </div>
     </ModalOverlay>
   );

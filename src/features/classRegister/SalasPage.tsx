@@ -12,7 +12,7 @@ import DeleteSalaModal from "./components/modals/DeleteSalaModal";
 
 import './styles/salas.css'
 import { Sala } from "./types/salas";
-import SuccessModal from "./components/modals/SuccessModal";
+import SuccessModal from "../../components/ui/SuccessModal";
 
 export const RegisterRoom = () => {
   const { salas, addSala, removeSala, refresh } = useSalas(); // ← addSala vem daqui!
