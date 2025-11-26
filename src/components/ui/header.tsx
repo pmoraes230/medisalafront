@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, FC } from "react";
 import { useClock } from "@/hooks/useClock";
-import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useLogout } from "@/features/auth/hooks/useLogout";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 // Definindo as props do componente
 interface HeaderProps {
@@ -14,14 +15,12 @@ interface HeaderProps {
 export const Header: FC<HeaderProps> = ({
   title = "Dashboard",
   titleClassName = "",
-  userName = "Name User",
-  userRole = "Cep Belém",
-  userPhoto, // pode ser undefined → usa as iniciais
 }) => {
+  const {nome, foto, cargo} = useCurrentUser();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const time = useClock();
-  const { logout } = useAuth();
+  const logout = useLogout();
 
   // === FECHA AO CLICAR FORA ===
   useEffect(() => {
@@ -40,7 +39,7 @@ export const Header: FC<HeaderProps> = ({
   };
 
   // Gera as iniciais caso não tenha foto
-  const initials = userName
+  const initials = nome
     .split(" ")
     .map(n => n[0])
     .join("")
@@ -76,19 +75,27 @@ export const Header: FC<HeaderProps> = ({
           onClick={toggleDropdown}
         >
           <div className="user-avatar w-10 h-10 bg-teal-700 text-white rounded-full flex items-center justify-center font-bold text-sm overflow-hidden">
-            {userPhoto ? (
-              <img src={userPhoto} alt={userName} className="w-full h-full object-cover" />
+            {foto ? (
+              <img 
+              src={`${import.meta.env.VITE_API_URL}/${foto}`} 
+              alt={nome}
+              className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling!.textContent = initials;
+                }}
+              />
             ) : (
-              <span>{initials}</span>
+              <span style={{ display: 'none' }}>{initials}</span>
             )}
           </div>
 
           <div className="user-details text-left hidden sm:block">
             <div className="user-name font-semibold text-slate-800 dark:text-slate-100">
-              {userName}
+              {nome}
             </div>
             <div className="user-role text-xs text-slate-600 dark:text-slate-400">
-              {userRole}
+              {cargo || 'Usuário'}
             </div>
           </div>
 
