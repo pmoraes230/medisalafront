@@ -104,7 +104,7 @@ export const UsuariosPage = () => {
         <Header title="Usuarios" />
 
         <div className="d-flex flex-column gap-6 mb-6">
-          <p className="text-slate-600 mb-6">
+          <p style={{ marginBottom: '1.5rem', color: "var(--text-light)" }} className="text-slate-600 mb-6">
             Gerencie e visualize todos os usuários cadastrados no sistema.
           </p>
 

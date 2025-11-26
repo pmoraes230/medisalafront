@@ -15,17 +15,17 @@ export default function DeleteUserModal({ isOpen, onClose, user, onConfirm }: De
 
   return (
     <ModalOverlay isOpen={isOpen} onClose={onClose}>
-      <div className="modal" style={{ maxWidth: '500px' }}>
-        <div className="modal-header">
-          <button className="btn-close" onClick={onClose}>×</button>
-          <div className="modal-icon warning">
+      <div className="modal_default" style={{ maxWidth: '500px' }}>
+        <div className="modal_header">
+          <button className="btn_close" onClick={onClose}>×</button>
+          <div className="modal_icon warning">
             <i className="fas fa-exclamation-triangle"></i>
           </div>
-          <div className="modal-title">Excluir Usuário</div>
+          <div className="modal_title">Excluir Usuário</div>
         </div>
 
-        <div className="modal-body">
-          <p>Tem certeza que deseja <strong>excluir permanentemente</strong> este usuário?</p>
+        <div className="modal_body">
+          <p style={{ marginBottom: '1.5rem', color: "var(--text-light)" }}>Tem certeza que deseja <strong>excluir permanentemente</strong> este usuário?</p>
           <div id="delete-preview" style={{ margin: '1rem 0', padding: '1rem', background: '#fef2f2', borderRadius: '8px', color: '#991b1b' }}>
             {user.foto_usuario ? (
               <img src={user.foto_usuario} style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', float: 'left', marginRight: '0.75rem' }} />
@@ -42,7 +42,7 @@ export default function DeleteUserModal({ isOpen, onClose, user, onConfirm }: De
           <p><strong>Esta ação não pode ser desfeita.</strong></p>
         </div>
 
-        <div className="modal-footer">
+        <div className="modal_footer">
           <button className="btn-modal cancel" onClick={onClose}>Cancelar</button>
           <button className="btn-modal" style={{ background: 'var(--danger)' }} onClick={onConfirm}>
             Excluir
