@@ -7,10 +7,27 @@ import { RegisterRoom } from '@/features/classRegister/SalasPage';
 import { InsumosPage } from '@/features/InsumosRegistro/pageInsumo';
 import { ReservaPage } from '@/features/reservaSala/reservaPage';
 import ProfilePage from '@/features/profilePage/ProfilePage';
+import { GuestRoute } from './GuestRoute';
 
 export const AppRoutes = () => (
   <Routes>
-    <Route path="/" element={<LoginPage />} />
+    {/* Páginas que só podem ser vistas se NÃO estiver logado */}
+    <Route
+      path="/"
+      element={
+        <GuestRoute>
+          <LoginPage />
+        </GuestRoute>
+      }
+    />
+    <Route
+      path="/login"
+      element={
+        <GuestRoute>
+          <LoginPage />
+        </GuestRoute>
+      }
+    />
     <Route
       path="/dashboard"
       element={

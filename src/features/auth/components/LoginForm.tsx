@@ -21,9 +21,6 @@ export const LoginForm = () => {
       {
         onSuccess: () => {
           setModal({ show: true, title: 'Sucesso!', msg: 'Bem-vindo!', type: 'success' });
-          setTimeout(() => {
-            window.location.href = '/dashboard';
-          }, 1200);
         },
         onError: (msg) => {
           setModal({ show: true, title: 'Erro de Login', msg, type: 'error' });
