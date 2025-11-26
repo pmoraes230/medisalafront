@@ -52,10 +52,10 @@
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/gestsala.git
+git clone https://github.com/pmoraes230/medisalafront.git
 
 # Entre na pasta
-cd gestsala
+cd medisalafront
 
 # Instale as dependências
 npm install
