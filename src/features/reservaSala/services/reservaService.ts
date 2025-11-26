@@ -1,5 +1,5 @@
 import { Reserva } from '../types/reserva';
-import { insumoService } from './insumoService';
+import { insumoService } from '@/features/InsumosRegistro/services/insumoService';
 
 const KEY = 'reservas';
 

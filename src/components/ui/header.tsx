@@ -4,13 +4,19 @@ import { useAuth } from "@/features/auth/hooks/useAuth";
 
 // Definindo as props do componente
 interface HeaderProps {
-  title?: string;           // opcional
-  titleClassName?: string;  // opcional, caso queira personalizar ainda mais a classe
+  title?: string;
+  titleClassName?: string;
+  userName?: string;      // ← novo
+  userRole?: string;      // ← novo
+  userPhoto?: string;     // ← novo (URL da foto ou base64)
 }
 
-export const Header: FC<HeaderProps> = ({ 
-  title = "Dashboard", 
-  titleClassName = "" 
+export const Header: FC<HeaderProps> = ({
+  title = "Dashboard",
+  titleClassName = "",
+  userName = "Name User",
+  userRole = "Cep Belém",
+  userPhoto, // pode ser undefined → usa as iniciais
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -33,11 +39,18 @@ export const Header: FC<HeaderProps> = ({
     setDropdownOpen(prev => !prev);
   };
 
+  // Gera as iniciais caso não tenha foto
+  const initials = userName
+    .split(" ")
+    .map(n => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
   return (
     <header className="header bg-white dark:bg-slate-900 p-4 rounded-xl shadow-md flex justify-between items-center mb-6 sticky top-0 z-10">
       {/* Lado esquerdo */}
       <div className="header-left">
-        {/* Aqui usamos a prop title */}
         <h1 className={`page-title text-2xl font-semibold text-teal-800 dark:text-teal-400 ${titleClassName}`}>
           {title}
         </h1>
@@ -50,7 +63,7 @@ export const Header: FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* User Dropdown (mantido exatamente igual) */}
+      {/* User Dropdown (com foto/nome dinâmicos) */}
       <div className="relative" ref={dropdownRef}>
         <div
           className={`
@@ -62,22 +75,27 @@ export const Header: FC<HeaderProps> = ({
           `}
           onClick={toggleDropdown}
         >
-          <div className="user-avatar w-10 h-10 bg-teal-700 text-white rounded-full flex items-center justify-center font-bold text-sm">
-            NU
+          <div className="user-avatar w-10 h-10 bg-teal-700 text-white rounded-full flex items-center justify-center font-bold text-sm overflow-hidden">
+            {userPhoto ? (
+              <img src={userPhoto} alt={userName} className="w-full h-full object-cover" />
+            ) : (
+              <span>{initials}</span>
+            )}
           </div>
 
           <div className="user-details text-left hidden sm:block">
             <div className="user-name font-semibold text-slate-800 dark:text-slate-100">
-              Name User
+              {userName}
             </div>
             <div className="user-role text-xs text-slate-600 dark:text-slate-400">
-              Cep Belém
+              {userRole}
             </div>
           </div>
 
           <i className={`bi bi-chevron-down text-slate-600 dark:text-slate-400 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}></i>
         </div>
 
+        {/* Dropdown — exatamente como estava */}
         {dropdownOpen && (
           <div className="dropdown-menu show absolute top-full right-0 mt-2 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden z-50 animate-in fade-in slide-in-from-top-4 duration-200">
             <a

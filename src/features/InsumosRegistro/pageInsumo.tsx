@@ -5,6 +5,7 @@ import FiltersInsumos from './components/FiltersInsumos';
 import InsumosTable from './components/InsumosTable';
 import AddInsumoModal from './components/modals/AddInsumoModal';
 import SuccessModal from '@/components/ui/SuccessModal';
+import { useUserProfile } from '../profilePage/hooks/useUserProfile';
 
 import { useInsumos } from './hooks/useInsumos';
 import { useState, useMemo } from 'react';
@@ -19,6 +20,7 @@ export const InsumosPage = () => {
     const [showAddModal, setShowAddModal] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [successMsg, setSuccessMsg] = useState('');
+    const { foto } = useUserProfile()
 
     const insumosFiltrados = useMemo(() => {
         return insumos.filter(i => {
@@ -40,7 +42,12 @@ export const InsumosPage = () => {
             <Sidebar />
 
             <main className="main-content">
-                <Header title="Gestão de Insumos" />
+                <Header
+                    title="Gestão de Insumos"
+                    userPhoto={foto}
+                    userName="Patrick Nascimento"
+                    userRole="Cep Belém"
+                />
                 <div className="d-flex flex-column gap-6 mb-6">
                     <p style={{ marginBottom: '1.5rem', color: "var(--text-light)" }} className="text-slate-600 mb-6">
                         Gerencie os insumos utilizados nas salas e laboratórios.

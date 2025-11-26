@@ -9,6 +9,7 @@ import SalasTable from "./components/SalasTable";
 import { useSalas } from "./hooks/useSalas";
 import AddSalaModal from "./components/modals/AddSalaModal";
 import DeleteSalaModal from "./components/modals/DeleteSalaModal";
+import { useUserProfile } from "../profilePage/hooks/useUserProfile";
 
 import './styles/salas.css'
 import { Sala } from "./types/salas";
@@ -23,6 +24,7 @@ export const RegisterRoom = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [salaToDelete, setSalaToDelete] = useState<Sala | null>(null);
+  const { foto } = useUserProfile()
 
   const salasFiltradas = useMemo(() => {
     return salas.filter((sala) => {
@@ -36,7 +38,12 @@ export const RegisterRoom = () => {
     <div className="container flex min-h-screen bg-slate-50">
       <Sidebar />
       <main className="main-content flex-1 p-6">
-        <Header title="Gestão de Salas" />
+        <Header
+                    title="Gestão de Salas"
+                    userPhoto={foto}
+                    userName="Patrick Nascimento"
+                    userRole="Cep Belém"
+                />
         <p style={{ marginBottom: '1.5rem', color: "var(--text-light)" }} className="text-slate-600 mb-6">
           Cadastre e gerencie as salas disponíveis para reserva.
         </p>

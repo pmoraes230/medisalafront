@@ -76,7 +76,7 @@ export default function AddInsumoModal({ isOpen, onClose, onSave }: Props) {
 
                         <div className="form-group">
                             <label>Validade *</label>
-                            <input type="date" name="validade_insumo" required />
+                            <input type="date" name="validade_insumo" required min={new Date().toISOString().split('T')[0]}/>
                         </div>
                     </div>
 
