@@ -10,7 +10,7 @@ import ProfilePage from '@/features/profilePage/ProfilePage';
 
 export const AppRoutes = () => (
   <Routes>
-    <Route path="/*" element={<LoginPage />} />
+    <Route path="/" element={<LoginPage />} />
     <Route
       path="/dashboard"
       element={
