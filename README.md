@@ -1,75 +1,70 @@
-# React + TypeScript + Vite
+# GestSala - Sistema de Gestão de Salas e Insumos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<p align="center">
+  <img src="./public/logo.png" alt="GestSala Logo" width="180"/>
+</p>
 
-Currently, two official plugins are available:
+<p align="center">
+  <strong>Sistema completo de reserva de salas, controle de insumos e gestão de usuários</strong>
+</p>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<p align="center">
+  <a href="#features">Funcionalidades</a> •
+  <a href="#tecnologias">Tecnologias</a> •
+  <a href="#instalação">Instalação</a> •
+  <a href="#imagens">Imagens</a> •
+  <a href="#autor">Autor</a>
+</p>
 
-## React Compiler
+<p align="center">
+  <img src="https://img.shields.io/badge/React-18.2.0-61DAFB?logo=react&logoColor=white" alt="React"/>
+  <img src="https://img.shields.io/badge/TypeScript-5.5+-3178C6?logo=typescript&logoColor=white" alt="TypeScript"/>
+  <img src="https://img.shields.io/badge/TailwindCSS-3.4-06B6D4?logo=tailwind-css&logoColor=white" alt="Tailwind"/>
+  <img src="https://img.shields.io/badge/Vite-5.4-646CFF?logo=vite&logoColor=white" alt="Vite"/>
+  <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow" alt="Status"/>
+</p>
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Funcionalidades
 
-Note: This will impact Vite dev & build performances.
+| Módulo              | Recursos Implementados                                                                 |
+|---------------------|-----------------------------------------------------------------------------------------|
+| **Dashboard**       | Visão geral, relógio em tempo real, estatísticas rápidas                                |
+| **Reservas**        | Agendamento com verificação de conflito, seleção de insumos, atualização automática de estoque |
+| **Salas**           | Cadastro, edição e exclusão de salas com capacidade e status                         |
+| **Insumos**         | Controle de estoque, validade, baixo estoque, consumo automático ao reservar            |
+| **Usuários**        | Cadastro de usuários (em desenvolvimento)                                              |
+| **Perfil**          | Upload de foto, salvamento no localStorage, sincronizado com header                     |
+| **Autenticação**    | Simulação com contexto + localStorage (pronto para integrar com backend)               |
+| **Acessibilidade**  | Modo escuro automático, aumento de fonte, alto contraste                                |
+| **Responsivo**      | 100% adaptável para tablet e celular                                                    |
 
-## Expanding the ESLint configuration
+## Tecnologias
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **React 18** + **TypeScript**
+- **Vite** (build ultra rápido)
+- **Tailwind CSS** (design moderno e responsivo)
+- **React Router DOM** (navegação)
+- **Zustand** ou **Context API** (gerenciamento de estado)
+- **localStorage** (persistência de dados)
+- **Font Awesome** + **Bootstrap Icons**
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Instalação
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+```bash
+# Clone o repositório
+git clone https://github.com/seu-usuario/gestsala.git
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+# Entre na pasta
+cd gestsala
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+# Instale as dependências
+npm install
+# ou
+yarn
+# ou
+pnpm install
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+# Rode o projeto
+npm run dev
+# ou
+yarn dev
