@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import ModalOverlay from '@/components/ui/ModalOverlay';
+import { usuarioService } from '../../services/userService';
+import { useUsers } from '../../hooks/useUsers';
 
 interface AddUserModalProps {
   isOpen: boolean;
@@ -9,7 +12,10 @@ interface AddUserModalProps {
 }
 
 export default function AddUserModal({ isOpen, onClose, onNext }: AddUserModalProps) {
+  const { addUser, error: hookError } = useUsers();
+
   const [foto, setFoto] = useState('');
+  const [fotoFile, setFotoFile] = useState<File | null>(null);
   const [form, setForm] = useState({
     nome_usuario: '',
     email_usuario: '',
@@ -17,6 +23,9 @@ export default function AddUserModal({ isOpen, onClose, onNext }: AddUserModalPr
     CPF_usuario: '',
     id_perfil: '',
   });
+
+  const [ isLoading, setIsLoading ] = useState(false);
+  const [ error, setError ] = useState('');
 
   const applyCPFMask = (value: string) => {
     return value
@@ -31,20 +40,56 @@ export default function AddUserModal({ isOpen, onClose, onNext }: AddUserModalPr
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
-      alert('Imagem muito grande! Máx. 2MB');
+      setError('Imagem muito grande! Máx. 2MB');
       return;
     }
+    setFotoFile(file)
     const reader = new FileReader();
     reader.onload = () => setFoto(reader.result as string);
     reader.readAsDataURL(file);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (Object.values(form).some(v => !v)) {
-      alert('Preencha todos os campos!');
+      setError('Preencha todos os campos!');
       return;
     }
-    onNext({ ...form, foto_usuario: foto || null });
+    setIsLoading(true)
+    setError('')
+
+    try {
+      const formData = new FormData();
+      formData.append('nome_usuario', form.nome_usuario);
+      formData.append('email_usuario', form.email_usuario);
+      formData.append('senha_usuario', form.senha_usuario);
+      formData.append('CPF_usuario', form.CPF_usuario);
+      formData.append('id_perfil', form.id_perfil);
+
+      if (fotoFile) {
+        formData.append('foto', fotoFile);
+      }
+
+      const response = await addUser(formData);
+      if (response.success) {
+        setForm({
+          nome_usuario: '',
+          email_usuario: '',
+          senha_usuario: '',
+          CPF_usuario: '',
+          id_perfil: '',
+        });
+        setFoto('');
+        setFotoFile(null);
+        onClose();
+        onNext(response.usuario)
+      } else {
+        setError(response.message);
+      }
+    } catch (err) {
+      setError("Erro ao salvar usuario. Tente novamente.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -91,6 +136,7 @@ export default function AddUserModal({ isOpen, onClose, onNext }: AddUserModalPr
               name='name_user'
               id='name_user'
               placeholder="Ex: Maria Silva"
+              // value={form.nome_usuario}
               onChange={(e) => setForm({ ...form, nome_usuario: e.target.value })}
             />
           </div>
@@ -138,6 +184,7 @@ export default function AddUserModal({ isOpen, onClose, onNext }: AddUserModalPr
               <option value="2">Professor</option>
             </select>
           </div>
+          {error && <div className='alert alert-danger'>{error}</div>}
         </div>
 
         <div className="modal_footer">

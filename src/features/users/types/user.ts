@@ -1,22 +1,20 @@
-export type Perfil = 1 | 2 | 3;
-
-export interface User {
+export interface Usuario {
   id_usuario: number;
   nome_usuario: string;
   email_usuario: string;
-  senha_usuario?: string; // só no cadastro
   CPF_usuario: string;
-  id_perfil: Perfil;
   foto_usuario?: string;
-  status: "ativo" | "inativo";
-  data_cadastro: string;
+  data_cadastro?: string;
+  id_perfil: number;
+  nome_perfil?: string; // vem do serializer
+  status: string;
 }
 
-export interface UserDraft {
+export interface CreateUsuario {
   nome_usuario: string;
   email_usuario: string;
-  senha_usuario: string;
   CPF_usuario: string;
-  id_perfil: string;
-  foto_usuario?: string;
+  senha_usuario: string;
+  foto_usuario?: string | null;
+  id_perfil: number;
 }

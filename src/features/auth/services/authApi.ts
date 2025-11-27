@@ -20,9 +20,10 @@ api.interceptors.response.use(
 );
 
 export interface LoginResponse {
-  success: boolean;  // ← corrigido: era "sucess"
+  success: boolean; 
   message: string;
   usuario: {
+    nome_perfil: string;
     id_usuario: number;
     nome_usuario: string;
     email_usuario: string;

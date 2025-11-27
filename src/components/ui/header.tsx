@@ -8,7 +8,7 @@ interface HeaderProps {
   title?: string;
   titleClassName?: string;
   userName?: string;      // ← novo
-  userRole?: string;      // ← novo
+  id_perfil?: string;      // ← novo
   userPhoto?: string;     // ← novo (URL da foto ou base64)
 }
 
@@ -82,7 +82,6 @@ export const Header: FC<HeaderProps> = ({
               className="w-full h-full object-cover"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
-                  e.currentTarget.nextElementSibling!.textContent = initials;
                 }}
               />
             ) : (

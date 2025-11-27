@@ -7,6 +7,6 @@ export const useCurrentUser = () => {
         isLoggedIn,
         nome: user?.nome_usuario || 'Usuário',
         foto: user?.foto_usuario || null,
-        cargo: user?.cargo_usuario || 'Sem cargo'
+        cargo: user?.nome_perfil || 'Sem cargo'
     }
 }

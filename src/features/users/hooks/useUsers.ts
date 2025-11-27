@@ -1,46 +1,69 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from 'react';
-import { User } from '../types/user';
-import { userService } from '../services/userService';
+import { Usuario } from '../types/user';
+import { usuarioService } from '../services/userService';
 
 export const useUsers = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null)
 
-  const loadUsers = () => {
+  const loadUsers = async () => {
     setLoading(true);
-    const data = userService.getAll();
-    setUsers(data);
-    setLoading(false);
+    setError(null)
+    try {
+      const data = await usuarioService.getAll();
+      setUsers(data);
+    } catch (err) {
+      setError("Error ao carregar usuarios");
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
   };
 
   useEffect(() => {
     loadUsers();
   }, []);
 
-  const addUser = (draft: any, foto?: string) => {
-    userService.create(draft, foto);
-    loadUsers();
-  };
-
-  const toggleStatus = (id: number) => {
-    const user = users.find(u => u.id_usuario === id);
-    if (user) {
-      const newStatus = user.status === 'ativo' ? 'inativo' : 'ativo';
-      userService.updateStatus(id, newStatus);
-      loadUsers();
+  const addUser = async (formData: FormData) => {
+    try {
+      const res = await usuarioService.create(formData);
+      if (res.success) {
+        loadUsers();
+        return res
+      } else {
+        throw new Error(res.message);
+      }
+    } catch (err) {
+      setError("Erro ao adicionar usuário");
+      console.error(err)
+      throw err
     }
   };
 
-  const removeUser = (id: number) => {
-    userService.delete(id);
-    loadUsers();
+  const toggleStatus = (id: number) => { 
+    setUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user.id_usuario === id
+          ? { ...user, status: user.status === 'ativo' ? 'inativo' : 'ativo' } 
+          : user 
+      )
+    );
   };
 
+  const removeUser = async (id: number) => { // Ajustado: assíncrono
+    try {
+      await usuarioService.delete(id); // Assumindo que existe esse método no service
+      loadUsers();
+    } catch (err) {
+      setError('Erro ao remover usuário.');
+      console.error(err);
+    }
+  };
   return {
     users,
     loading,
+    error, // Novo: retorna erro para exibir no UI
     addUser,
     toggleStatus,
     removeUser,
