@@ -1,70 +1,262 @@
-# GestSala - Sistema de Gestão de Salas e Insumos
+# Sistema de Gestão de Usuários
 
-<p align="center">
-  <img src="./public/img/icon.svg" alt="GestSala Logo" width="180"/>
-</p>
+## 📋 Visão Geral
 
-<p align="center">
-  <strong>Sistema completo de reserva de salas, controle de insumos e gestão de usuários</strong>
-</p>
+Sistema completo de CRUD de usuários com autenticação baseada em sessões Django + React frontend.
 
-<p align="center">
-  <a href="#features">Funcionalidades</a> •
-  <a href="#tecnologias">Tecnologias</a> •
-  <a href="#instalação">Instalação</a> •
-  <a href="#imagens">Imagens</a> •
-  <a href="#autor">Autor</a>
-</p>
+**Backend**: Django REST Framework + MySql  
+**Frontend**: React 18 + TypeScript + Vite + Zustand
 
-<p align="center">
-  <img src="https://img.shields.io/badge/React-18.2.0-61DAFB?logo=react&logoColor=white" alt="React"/>
-  <img src="https://img.shields.io/badge/TypeScript-5.5+-3178C6?logo=typescript&logoColor=white" alt="TypeScript"/>
-  <img src="https://img.shields.io/badge/TailwindCSS-3.4-06B6D4?logo=tailwind-css&logoColor=white" alt="Tailwind"/>
-  <img src="https://img.shields.io/badge/Vite-5.4-646CFF?logo=vite&logoColor=white" alt="Vite"/>
-  <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow" alt="Status"/>
-</p>
+## 🚀 Funcionalidades
 
-## Funcionalidades
+- ✅ **Autenticação** por CPF ou Email
+- ✅ **CRUD completo** de usuários
+- ✅ **Toggle status** (Ativo/Inativo)
+- ✅ **Protected Routes**
+- ✅ **Loading states** e tratamento de erros
+- ✅ **Upload de foto** do usuário
+- ✅ **Validação** CPF/Email únicos
 
-| Módulo              | Recursos Implementados                                                                 |
-|---------------------|-----------------------------------------------------------------------------------------|
-| **Dashboard**       | Visão geral, relógio em tempo real, estatísticas rápidas                                |
-| **Reservas**        | Agendamento com verificação de conflito, seleção de insumos, atualização automática de estoque |
-| **Salas**           | Cadastro, edição e exclusão de salas com capacidade e status                         |
-| **Insumos**         | Controle de estoque, validade, baixo estoque, consumo automático ao reservar            |
-| **Usuários**        | Cadastro de usuários (em desenvolvimento)                                              |
-| **Perfil**          | Upload de foto, salvamento no localStorage, sincronizado com header                     |
-| **Autenticação**    | Simulação com contexto + localStorage (pronto para integrar com backend)               |
-| **Acessibilidade**  | Modo escuro automático, aumento de fonte, alto contraste                                |
-| **Responsivo**      | 100% adaptável para tablet e celular                                                    |
+## 🛠️ Estrutura do Projeto
 
-## Tecnologias
+```
+projeto/
+├── backend/          # Django API
+│   ├── api/
+│   │   ├── models.py
+│   │   ├── views.py
+│   │   ├── serializers.py
+│   │   └── permissions.py
+│   ├── urls.py
+│   └── settings.py
+└── frontend/         # React App
+    ├── src/
+    │   ├── hooks/
+    │   │   ├── useAuth.ts
+    │   │   └── useApiAuth.ts
+    │   ├── services/
+    │   │   ├── api.ts
+    │   │   ├── authApi.ts
+    │   │   └── userService.ts
+    │   └── features/
+    │       ├── auth/
+    │       └── users/
+```
 
-- **React 18** + **TypeScript**
-- **Vite** (build ultra rápido)
-- **Tailwind CSS** (design moderno e responsivo)
-- **React Router DOM** (navegação)
-- **Zustand** ou **Context API** (gerenciamento de estado)
-- **localStorage** (persistência de dados)
-- **Font Awesome** + **Bootstrap Icons**
+## 🔧 Instalação
 
-## Instalação
+### Backend (Django)
 
 ```bash
-# Clone o repositório
-git clone https://github.com/pmoraes230/medisalafront.git
+cd backend
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+```
 
-# Entre na pasta
-cd medisalafront
+### Frontend (React)
 
-# Instale as dependências
+```bash
+cd frontend
 npm install
-# ou
-yarn
-# ou
-pnpm install
-
-# Rode o projeto
 npm run dev
-# ou
-yarn dev
+```
+
+## 📖 Configuração
+
+### Backend
+
+**1. `settings.py` (obrigatório)**
+
+```python
+# CORS
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173"
+]
+CORS_ALLOW_CREDENTIALS = True
+
+# Sessions
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SECURE = False
+SESSION_SAVE_EVERY_REQUEST = True
+
+# Authentication
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+```
+
+**2. Permissions Custom (`api/permissions.py`)**
+
+```python
+from rest_framework.permissions import BasePermission
+from . import models
+
+class IsAuthenticatedSession(BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.session.get('usuario_id'))
+
+class IsAdminSession(BasePermission):
+    def has_permission(self, request, view):
+        usuario_id = request.session.get('usuario_id')
+        if not usuario_id: return False
+        usuario = models.Usuario.objects.get(id_usuario=usuario_id)
+        return usuario.id_perfil.nome_perfil == 'Administrador'
+```
+
+**3. Views (`api/views.py`)**
+
+```python
+from .permissions import IsAuthenticatedSession, IsAdminSession
+
+class UsuarioViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticatedSession]
+    
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            return [IsAdminSession()]
+        return [IsAuthenticatedSession()]
+```
+
+### Frontend
+
+**1. API Unificada (`src/services/api.ts`)**
+
+```typescript
+import axios from 'axios';
+
+export const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api',
+  withCredentials: 'include',
+  timeout: 10000,
+});
+
+export default api;
+```
+
+**2. Auth Hook Único (`src/hooks/useApiAuth.ts`)**
+
+```typescript
+import { create } from 'zustand';
+import { authApi } from '@/features/auth/services/authApi';
+
+export const useApiAuth = create<ApiAuthState>((set) => ({
+  isAuthenticated: false,
+  isLoading: false,
+  user: null,
+  
+  checkAuth: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await authApi.checkAuth();
+      if (response.isLoggedIn && response.usuario) {
+        set({ isAuthenticated: true, user: response.usuario, isLoading: false });
+        return true;
+      }
+      set({ isLoading: false });
+      return false;
+    } catch {
+      set({ isAuthenticated: false, isLoading: false });
+      return false;
+    }
+  },
+  
+  login: async (creds) => {
+    try {
+      const response = await authApi.login(creds);
+      if (response.success && response.usuario) {
+        set({ isAuthenticated: true, user: response.usuario });
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  },
+}));
+```
+
+## 🧪 Testes de Funcionalidade
+
+### Fluxo Completo
+
+```
+1. Login (CPF/Email + Senha)
+2. → Cookies sessionid criados
+3. → /check-auth → 200 OK
+4. → /usuarios/ → 200 OK (lista carrega)
+5. ✅ CRUD funcionando
+```
+
+### Endpoints Principais
+
+```
+POST /api/login/           # Autenticação
+GET  /api/check-auth       # Verificar sessão
+GET  /api/usuarios/        # Listar usuários
+POST /api/usuarios/        # Criar usuário
+PATCH /api/usuarios/:id/   # Toggle status
+DELETE /api/usuarios/:id/  # Excluir usuário
+```
+
+## 🔍 Solução de Problemas
+
+### Erro 403 após login
+
+**Causa**: Django `IsAuthenticated` não reconhece sessão custom
+**Solução**: Usar `IsAuthenticatedSession` nas views
+
+### Cookies não enviados
+
+**Verificar**:
+```bash
+# Django settings.py
+CORS_ALLOW_CREDENTIALS = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+
+# Frontend api.ts
+withCredentials: 'include'
+```
+
+### ProtectedRoute redireciona sempre
+
+**Solução**: Usar `useApiAuth` com `AuthInitializer`
+
+## 📁 Estrutura de Arquivos Críticos
+
+```
+backend/api/
+├── permissions.py    # ← CRÍTICO
+├── views.py          # ← Aplicar permissions
+└── urls.py
+
+frontend/src/
+├── services/api.ts       # ← API unificada
+├── hooks/useApiAuth.ts   # ← Auth único
+└── components/AuthInitializer.tsx
+```
+
+## 🚀 Deploy
+
+### Backend (Production)
+
+```bash
+# settings.py
+DEBUG = False
+ALLOWED_HOSTS = ['seusite.com']
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+```
+
+### Frontend
+
+```bash
+npm run build
+# Copiar dist/ para servidor
+```
+
+**Status**: ✅ **Production Ready**  
+**Última atualização**: 28 de Novembro de 2025
