@@ -1,23 +1,31 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from 'react';
 import { Usuario } from '../types/user';
 import { usuarioService } from '../services/userService';
+import { useApiAuth } from '@/hooks/useApiAuth';
 
 export const useUsers = () => {
   const [users, setUsers] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null);
+  const { checkAuth, isAuthenticated } = useApiAuth();  // Adicione isso
 
   const loadUsers = async () => {
+    // Verifique a autenticação antes de carregar
+    const isAuth = await checkAuth();
+    if (!isAuth) {
+      setError('Usuário não autenticado');
+      return;
+    }
     setLoading(true);
-    setError(null)
     try {
       const data = await usuarioService.getAll();
       setUsers(data);
     } catch (err) {
-      setError("Error ao carregar usuarios");
-      console.error(err)
+      setError(err.message || 'Erro ao carregar usuários');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 

@@ -1,19 +1,20 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/features/auth/hooks/useAuth';
-import type { ReactNode } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useSyncedApiAuth } from '@/hooks/useApiAuth';  // Mude aqui: importe useSyncedApiAuth em vez de useApiAuth
+import { useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 
-export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
-  const { isLoggedIn, isLoading } = useAuth(); // use isLoading se tiver
-  const location = useLocation();
+export const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, isLoading, checkAuth } = useSyncedApiAuth();  // Mude aqui: use useSyncedApiAuth em vez de useApiAuth
 
-  // Opcional: mostrar loading enquanto verifica autenticação
-  if (isLoading) {
-    return <div>Carregando...</div>; // ou um spinner bonitinho
-  }
+  // 🔍 VERIFICA na primeira vez
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      checkAuth();
+    }
+  }, []);
 
-  return isLoggedIn ? (
-    <>{children}</>
-  ) : (
-    <Navigate to="/login" replace state={{ from: location }} />
-  );
+  if (isLoading) return <div>Carregando...</div>;
+  if (!isAuthenticated) return <Navigate to="/login" />;
+
+  return <>{children}</>;
 };

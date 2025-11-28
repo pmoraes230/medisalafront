@@ -1,14 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import api from '@/services/api';
 import { Usuario } from '../types/user';
-import axios, { AxiosError } from 'axios';
-
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  headers: {
-    'Content-Type': 'multipart/form-data'
-  },
-  withCredentials: true,
-});
+import { AxiosError } from 'axios';
 
 export interface CreateUsuarioResponse {
   success: boolean;
@@ -47,13 +40,21 @@ const extractErrorMessage = (errorData: any): string => {
     }
   }
 
-  return typeof errorData === 'string' ? errorData : 'Erro desconhecido'
-}
+  return typeof errorData === 'string' ? errorData : 'Erro desconhecido';
+};
 
 export const usuarioService = {
+  getAll: async (): Promise<Usuario[]> => { 
+    const response = await api.get('/usuarios/');
+    return response.data;
+  },
+
+  // CRIAR
   create: async (data: FormData): Promise<CreateUsuarioResponse> => {
+
     try {
       const response = await api.post('/usuarios/', data);
+      
       return {
         success: true,
         message: response.data.message || 'Usuário criado com sucesso!',
@@ -62,7 +63,9 @@ export const usuarioService = {
     } catch (error: any) {
       const axiosError = error as AxiosError<UsuarioError>;
       const responseData = axiosError.response?.data;
-
+      
+      console.error('❌ ERRO CRIAR:', responseData);
+      
       return {
         success: false,
         message: extractErrorMessage(responseData),
@@ -71,14 +74,16 @@ export const usuarioService = {
     }
   },
 
-  getAll: async (): Promise<Usuario[]> => {
-    const response = await api.get('/usuarios/');
-    return response.data
-  },
   updateStatus: async (id: number, status: string) => {
+    console.log(`🔄 STATUS ${id}: ${status}`);
     await api.patch(`/usuarios/${id}/`, { status });
+    console.log('✅ STATUS ATUALIZADO!');
   },
+
+  // 🗑️ DELETAR
   delete: async (id: number) => {
+    console.log(`🗑️ DELETANDO ${id}...`);
     await api.delete(`/usuarios/${id}/`);
+    console.log('✅ USUÁRIO DELETADO!');
   },
-}
+};

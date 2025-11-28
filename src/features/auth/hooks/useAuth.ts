@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { authApi, LoginResponse } from '../services/authApi';
 
 interface AuthState {
@@ -16,16 +17,44 @@ interface AuthState {
     }
   ) => Promise<void>;
 
-  /** APENAS limpa o estado local – NÃO faz navegação aqui! */
+  checkAuth: () => Promise<void>;
   clearAuth: () => void;
 }
 
 export const useAuth = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       isLoggedIn: false,
       isLoading: false,
+
+      checkAuth: async () => {
+        const { isLoading } = get();
+        if (isLoading) return;
+        
+        set({ isLoading: true });
+        try {
+          const response = await authApi.checkAuth();
+          
+          if (response.isLoggedIn && response.usuario) {
+            set({
+              user: response.usuario,
+              isLoggedIn: true,
+              isLoading: false,
+            });
+            console.log('ZUSTAND: Usuário autenticado via backend');
+          } else {
+            set({ isLoading: false });
+          }
+        } catch (error) {
+          console.log('ZUSTAND: Não autenticado');
+          set({ 
+            user: null, 
+            isLoggedIn: false, 
+            isLoading: false 
+          });
+        }
+      },
 
       login: async (creds, callbacks) => {
         set({ isLoading: true });
@@ -50,11 +79,12 @@ export const useAuth = create<AuthState>()(
       },
     }),
     {
-      name: 'auth-storage', // chave no localStorage
+      name: 'auth-storage',
       partialize: (state) => ({
         isLoggedIn: state.isLoggedIn,
         user: state.user,
       }),
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

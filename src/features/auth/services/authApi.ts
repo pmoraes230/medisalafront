@@ -1,23 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/// <reference types="vite/client" />
+import api from '@/services/api'; 
 import type { LoginCredentials } from '../types/LoginCredentials';
-import axios from 'axios';
-
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true,
-  timeout: 10000,
-});
-
-// Interceptor global (opcional, mas ajuda muito no debug)
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    console.warn('API Error:', error.response?.data || error.message);
-    return Promise.reject(error);
-  }
-);
 
 export interface LoginResponse {
   success: boolean; 
@@ -32,7 +15,6 @@ export interface LoginResponse {
   };
 }
 
-// Resposta do check-auth/
 export interface CheckAuthResponse {
   isLoggedIn: boolean;
   usuario?: LoginResponse['usuario'];
@@ -40,29 +22,25 @@ export interface CheckAuthResponse {
 
 export const authApi = {
   login: async (creds: LoginCredentials): Promise<LoginResponse> => {
-    const response = await api.post<LoginResponse>('/login/', creds);
+    console.log('🔑 LOGIN:', creds.identifier);
+    const response = await api.post<LoginResponse>('/login/', creds);  // 👈 MESMA API!
+    console.log('✅ LOGIN OK! Cookies:', document.cookie ? 'SIM' : 'NÃO');
     return response.data;
   },
 
   logout: async (): Promise<void> => {
+    console.log('🚪 LOGOUT...');
     try {
-      await api.post('/logout/');
+      await api.post('/logout/');  // 👈 MESMA API!
     } catch (err) {
-      // Mesmo se falhar, o frontend vai limpar o estado
-      console.warn('Logout no backend falhou, continuando localmente...');
+      console.warn('⚠️ Logout backend falhou, limpando local...');
     }
   },
 
   checkAuth: async (): Promise<CheckAuthResponse> => {
-    try {
-      const response = await api.get<CheckAuthResponse>('/check-auth/');
-      return response.data;
-    } catch (err: any) {
-      // Se der erro (rede, backend off, CORS, etc.) → considera deslogado
-      if (err.response?.status === 401 || err.response?.status === 403) {
-        return { isLoggedIn: false };
-      }
-      throw err;
-    }
+    console.log('🔍 CHECK AUTH...');
+    const response = await api.get('/check-auth');  // 👈 MESMA API!
+    console.log('✅ CHECK AUTH:', response.data);
+    return response.data;
   },
 };

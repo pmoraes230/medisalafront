@@ -16,4 +16,14 @@ export default defineConfig({
       // Você pode adicionar mais se quiser
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      }
+    }
+  }
 });

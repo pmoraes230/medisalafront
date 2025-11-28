@@ -1,8 +1,13 @@
 import { useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import { useApiAuth } from '@/hooks/useApiAuth';
+import { useNavigate } from 'react-router-dom';
 import { Modal } from '@/components/ui/Modal';
 
-export const LoginForm = () => {
+interface LoginFormProps {
+  onLoginSuccess?: () => void;
+}
+
+export const LoginForm = ({ onLoginSuccess }: LoginFormProps) => {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [modal, setModal] = useState<{ show: boolean; title: string; msg: string; type: 'success' | 'error' }>({
@@ -12,21 +17,24 @@ export const LoginForm = () => {
     type: 'success',
   });
 
-  const { login, isLoading } = useAuth();
+  const { login: apiLogin, isLoading } = useApiAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    login(
-      { identifier, password },
-      {
-        onSuccess: () => {
-          setModal({ show: true, title: 'Sucesso!', msg: 'Bem-vindo!', type: 'success' });
-        },
-        onError: (msg) => {
-          setModal({ show: true, title: 'Erro de Login', msg, type: 'error' });
-        },
-      }
-    );
+    
+    const success = await apiLogin({ identifier, password });
+    
+    if (success) {
+      onLoginSuccess?.();
+      setModal({ show: true, title: 'Sucesso!', msg: 'Bem-vindo!', type: 'success' });
+      setTimeout(() => {
+        setModal({ ...modal, show: false });
+        navigate('/dashboard', { replace: true });
+      }, 1500);
+    } else {
+      setModal({ show: true, title: 'Erro de Login', msg: 'Credenciais inválidas', type: 'error' });
+    }
   };
 
   return (

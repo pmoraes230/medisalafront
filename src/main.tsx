@@ -19,6 +19,7 @@ import './style/sidebar.css';
 
 // Opcional: se usar react-hot-toast (recomendado!)
 import 'react-hot-toast';
+import { AuthInitializer } from './AuthInitializer';
 
 // Configuração do React Query (com boas práticas 2025)
 const queryClient = new QueryClient({
@@ -36,10 +37,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        {/* Seu app de rotas */}
+        <AuthInitializer />
         <AppRoutes />
-
-        {/* Toast global (sucesso, erro, loading) */}
         <Toaster
           position="top-right"
           reverseOrder={false}
